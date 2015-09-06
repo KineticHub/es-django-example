@@ -84,6 +84,12 @@ class Question(Post):
             'view_count': self.view_count,
             'answer_count': self.answer_count,
             'has_accepted_answer': bool(self.accepted_answer_id),
+            'suggest': {
+                'input': self.title,
+                'output': self.title,
+                'payload': {'id': self.id},
+                'weight': (self.score or 1) + 100 # cannot be negative
+            }
         })
         if self.last_editor:
             d.update({

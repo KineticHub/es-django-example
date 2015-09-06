@@ -1,7 +1,8 @@
 from django.conf import settings
 
+# noinspection PyUnresolvedReferences
 from elasticsearch_dsl import DocType, Date, String, Nested, Object, Index, \
-    MetaField, analyzer, FacetedSearch, A, Q
+    MetaField, analyzer, FacetedSearch, A, Q, Completion
 
 # user is repeated in several places, reuse a field definition
 user_field = Object(properties={
@@ -31,6 +32,14 @@ class Question(Post):
     last_editor = user_field
     last_edit_date = Date()
 
+    suggest = Completion(payloads=True)
+
+    # es.suggest(index='stack', body={'auto-complete': {'text': 'N', 'completion' { 'field': 'suggest' }}})
+
+    # s = Search(index='stack')
+    # s.suggest('auto', 'N', 'completion'={'field': 'suggest'})
+    # r = s.execute()
+    # r.suggest.auto
 
 class Answer(Post):
     class Meta:
